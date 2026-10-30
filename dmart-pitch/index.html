@@ -1,0 +1,334 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DMart — Trolley-Rest Pilot Pitch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--cream:#F2EFE9;--dark:#3A4C40;--sage:#8BA892;--clay:#C4694A;--sagep:#E6ECE8;--clayp:#F4E7E1;--ink:#2B3830;--grey:#6E7A72;--line:#D8DED9;--white:#FFFFFF}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;background:#222;overflow:hidden;font-family:'Work Sans',sans-serif;color:var(--ink)}
+#wrap{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 30%,#2c2c2c,#161616)}
+#stage{position:relative;width:1920px;height:1080px;background:var(--cream);overflow:hidden;box-shadow:0 30px 90px rgba(0,0,0,.5)}
+.slide{position:absolute;inset:0;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .35s ease}
+.slide.active{opacity:1;visibility:visible;pointer-events:auto}
+@keyframes rise{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+@keyframes pop{from{opacity:0;transform:scale(.82)}to{opacity:1;transform:none}}
+.noanim{opacity:1!important}
+.topbar{position:absolute;left:0;top:0;width:1920px;height:23px;background:var(--dark)}
+.chip{position:absolute;left:101px;top:66px;width:43px;height:43px;background:var(--clay);border-radius:11px}
+.eyebrow{position:absolute;left:161px;top:70px;font:700 24px 'Archivo',sans-serif;letter-spacing:1.5px;color:var(--dark)}
+.headline{position:absolute;left:101px;top:132px;width:1720px;font:800 58px 'Archivo',sans-serif;line-height:1.04;color:var(--ink)}
+.footer{position:absolute;left:101px;top:1452px;width:1718px;display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--grey);border-top:1px solid var(--line);padding-top:6px}
+.pagenum{font:700 13px 'Archivo',sans-serif;color:var(--dark)}
+.label{font:700 24px 'Archivo',sans-serif;letter-spacing:1px;color:var(--dark);margin-bottom:8px}
+.body{font-size:31px;line-height:1.18;color:var(--ink)}
+.bullet{font-size:31px;line-height:1.2;color:var(--ink);margin:0 0 28px 24px;position:relative}
+.bullet::before{content:"";position:absolute;left:-24px;top:14px;width:11px;height:11px;background:var(--clay);border-radius:3px}
+.col{position:absolute}
+.note{font-size:22px;color:var(--grey)}
+.sub{position:absolute;left:101px;width:1718px;font-size:26px;color:var(--grey)}
+.badge{position:absolute;width:439px;height:439px;border-radius:50%;background:var(--clay);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center}
+.bignum{font:800 172px 'Archivo',sans-serif;line-height:1}
+.badge-cap{font-size:26px;font-weight:700;margin-top:6px}
+.badge-tag{font:700 20px 'Archivo',sans-serif;letter-spacing:2px;margin-top:18px;color:#f6d9cd}
+.barlabel{font:700 25px 'Archivo',sans-serif;color:var(--ink);margin-bottom:10px}
+.track{position:relative;width:778px;height:72px;background:var(--sagep);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.fill{height:72px;border-radius:14px}
+.barval{position:absolute;right:18px;top:18px;font:700 28px 'Archivo',sans-serif;color:#fff}
+.journey{position:absolute;left:101px;width:1718px;display:flex;align-items:center;gap:49px}
+.jnode{flex:1;height:124px;background:#fff;border:2px solid var(--line);border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.jactive{background:var(--dark);border-color:var(--dark)}
+.jlabel{font:700 26px 'Archivo',sans-serif;color:var(--ink)}
+.jactive .jlabel{color:#fff}
+.jsub{font-size:19px;color:var(--grey)}
+.jactive .jsub{color:#cdd8cf}
+.jchev{color:var(--sage);font-size:30px}
+.callout{position:absolute;left:101px;width:1718px;height:223px;background:var(--sagep);border:1px solid var(--line);border-radius:18px;padding:34px 44px}
+.grid2{position:absolute;width:893px;display:grid;grid-template-columns:1fr 1fr;gap:43px 43px}
+.card{position:relative;background:#fff;border:2px solid var(--line);border-radius:18px;padding:32px 28px;height:223px}
+.ch{background:var(--dark);border-color:var(--dark)}
+.ctitle{font:700 27px 'Archivo',sans-serif;color:var(--ink)}
+.ch .ctitle{color:#fff}
+.csub{font-size:22px;color:var(--grey);margin-top:8px}
+.ch .csub{color:#cdd8cf}
+.ctag{position:absolute;top:24px;right:28px;font:700 18px 'Archivo',sans-serif;color:#fff}
+.check{display:flex;align-items:center;gap:14px;font-size:25px;color:var(--ink);margin-bottom:16px}
+.tick{width:49px;height:49px;border-radius:50%;background:var(--sage);color:#fff;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700}
+.path{display:flex;align-items:center;gap:0;margin:14px 0 0}
+.step{height:89px;background:var(--sagep);border:2px solid var(--sage);border-radius:14px;display:flex;align-items:center;justify-content:center;text-align:center;font:700 21px 'Archivo',sans-serif;color:var(--dark);padding:0 6px}
+.sl{background:var(--dark);color:#fff;border-color:var(--dark)}
+.ar{color:var(--sage);font-size:30px;padding:0 10px;font-weight:700}
+.spec{position:absolute;width:504px;height:367px}
+.seat{position:absolute;left:72px;top:58px;width:360px;height:223px;background:var(--sagep);border:2px solid var(--sage);border-radius:22px;display:flex;align-items:center;justify-content:center}
+.seatlabel{font:700 24px 'Archivo',sans-serif;color:var(--dark)}
+.dim{position:absolute;font:700 22px 'Archivo',sans-serif;color:var(--ink)}
+.dim-top{left:170px;top:-8px}
+.dim-left{right:392px;top:150px;text-align:right;width:200px}
+.dim-right{left:452px;top:150px}
+.speccap{position:absolute;left:0;top:300px;width:504px;text-align:center;font-size:23px;color:var(--grey);font-style:italic}
+.onesent{position:absolute;left:101px;top:389px;width:1718px;height:144px;background:var(--sagep);border:2px solid var(--dark);border-radius:18px;padding:22px 38px;display:flex;flex-direction:column;justify-content:center}
+.sent{font:700 31px 'Work Sans',sans-serif;color:var(--ink);line-height:1.1}
+.steprow{position:absolute;left:101px;width:1718px;display:flex;align-items:stretch;gap:0}
+.scard{flex:1;background:#fff;border:1px solid var(--line);border-radius:18px;padding:40px 34px;height:324px}
+.scircle{width:122px;height:122px;border-radius:50%;background:var(--dark);color:#fff;display:flex;align-items:center;justify-content:center;font:800 60px 'Archivo',sans-serif}
+.sctitle{font:700 30px 'Archivo',sans-serif;color:var(--dark);margin:24px 0 14px}
+.scdesc{font-size:25px;color:var(--grey);line-height:1.18}
+.arbig{color:var(--sage);font-size:54px;font-weight:700;display:flex;align-items:center;padding:0 26px}
+.featrow{position:absolute;left:101px;width:1718px;display:flex;gap:29px}
+.feat{flex:1;background:#fff;border:1px solid var(--line);border-radius:18px;height:534px;position:relative;padding:0 26px}
+.featbar{position:absolute;top:0;left:0;width:100%;height:17px;background:var(--dark);border-radius:18px 18px 0 0}
+.featnum{width:121px;height:121px;border-radius:50%;background:var(--sage);color:var(--dark);display:flex;align-items:center;justify-content:center;font:800 58px 'Archivo',sans-serif;margin:42px auto 22px}
+.feattitle{font:700 27px 'Archivo',sans-serif;color:var(--ink);text-align:center;line-height:1.05}
+.featdesc{font-size:22px;color:var(--grey);text-align:center;margin-top:18px;line-height:1.15}
+.featdiv{height:2px;background:var(--sage);margin:26px 0 14px}
+.featbenefit{font:700 19px 'Archivo',sans-serif;color:var(--clay);text-align:center}
+.featb{font-size:21px;color:var(--ink);text-align:center;margin-top:8px;line-height:1.12}
+.scen{background:var(--sagep);border:1px solid var(--line);border-radius:14px;padding:20px 24px;font-size:24px;color:var(--ink);line-height:1.15;margin-bottom:18px}
+.mantra{font-size:23px;color:var(--grey);font-style:italic;text-align:center;margin-top:14px}
+.pills{display:flex;gap:20px}
+.pillbox{background:var(--dark);color:#fff;font:700 23px 'Archivo',sans-serif;padding:12px 26px;border-radius:30px}
+.ktable{position:absolute;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.krow{display:grid;grid-template-columns:2.1fr 1.1fr 1.1fr 1.7fr;border-bottom:1px solid var(--line)}
+.krow:last-child{border-bottom:none}
+.krow>div{padding:22px 22px;font-size:25px;display:flex;align-items:center;color:var(--ink)}
+.khead{background:var(--dark)}
+.khead>div{color:#fff;font:700 26px 'Archivo',sans-serif}
+.kneed{background:var(--clayp);font:700 25px 'Archivo',sans-serif;color:var(--clay)}
+.khow{color:var(--grey);font-size:23px}
+.askrow{position:absolute;left:101px;width:1718px;display:flex;gap:72px}
+.ask{flex:1;background:#fff;border:1px solid var(--line);border-radius:18px;height:476px;padding:0 36px;position:relative}
+.askhead{background:var(--dark);color:#fff;font:700 28px 'Archivo',sans-serif;text-align:center;padding:16px 0;border-radius:18px 18px 0 0;margin:0 -36px 30px}
+.askbody{font-size:26px;color:var(--ink);line-height:1.2}
+.askneed{position:absolute;left:36px;bottom:30px}
+.cta{position:absolute;left:101px;top:929px;width:1718px;height:79px;background:var(--dark);border-radius:14px;color:var(--cream);display:flex;align-items:center;justify-content:center;font:700 27px 'Archivo',sans-serif}
+.pill{display:inline-flex;align-items:center;justify-content:center;background:var(--clayp);border:1.5px solid var(--clay);color:var(--clay);font:700 22px 'Archivo',sans-serif;border-radius:20px;height:49px;padding:0 6px;vertical-align:middle}
+#nav{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:10px;z-index:20}
+#nav button{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.3);color:#eee;font:700 14px 'Archivo';padding:8px 16px;border-radius:8px;cursor:pointer}
+#nav button:hover{background:rgba(255,255,255,.25)}
+#dots{position:fixed;bottom:60px;left:50%;transform:translateX(-50%);display:flex;gap:9px;z-index:20}
+.dot{width:11px;height:11px;border-radius:50%;background:rgba(255,255,255,.3);cursor:pointer}
+.dot.on{background:#fff}
+#notes{position:fixed;left:0;bottom:0;width:100%;background:rgba(20,28,23,.94);color:#e8efe9;font-size:15px;line-height:1.4;padding:14px 26px 16px;border-top:2px solid var(--clay);z-index:30;display:none}
+#notes.show{display:block}
+#notes b{color:var(--clay)}
+#hint{position:fixed;top:16px;right:20px;color:rgba(255,255,255,.5);font-size:12px;z-index:20}
+</style></head>
+<body>
+<div id="wrap"><div id="stage">
+<section class="slide" data-notes="Open with the tension: DMart wins on price, but the moment that sticks with a tired shopper is the billing queue. 75% of the study's surveyed shoppers named 'nowhere to rest' as a grave problem — bigger than price or stock complaints. That is a loyalty lever DMart is not yet pulling. Set up the rest of the deck as the fix.">
+  <div class="topbar noanim"></div>
+  <div class="chip noanim"></div>
+  <div class="eyebrow">THE HOOK  ·  01</div>
+  <div class="headline">Your highest-value shoppers are the ones standing in line with nowhere to sit.</div>
+  
+<div class="col" style="left:101px;top:389px;width:1066px">
+  <div class="label">THE MAIN POINT</div>
+  <div class="body" style="font-size:34px;line-height:1.15;margin-bottom:36px">Give tired shoppers a rest on their own trolley, and the billing-queue wait becomes a reason to come back — not a reason to rush out.</div>
+  <div class="label">THE SHOPPER TRUTH</div>
+  <div class="body" style="font-size:30px;color:#6E7A72;line-height:1.15">When asked the biggest in-store problem, shoppers did not complain about price or stock — they complained about having nowhere to sit or rest.</div>
+</div>
+<div class="badge" style="left:1360px;top:425px">
+  <div class="bignum">75%</div>
+  <div class="badge-cap">of surveyed shoppers say<br>NO REST is a grave problem</div>
+  <div class="badge-tag">SURVEY SIGNAL</div>
+</div>
+  <div class="footer noanim"><span>DMart · Trolley-Rest Pilot Pitch</span><span>Source: Group 7 HCD study · DMart + Star Bazaar observations</span><span class="pagenum">01 / 10</span></div>
+</section>
+
+<section class="slide" data-notes="Frame the problem in DMart's language: basket size and repeat rate. The 75% and 64% are real signals from the study's survey, but flag the sample honestly — ~50 responses from college/family, not a DMart panel. The loose-grain 64% is context, not our hero; the seating gap is. Bridge: tired shoppers want to 'bill and exit,' so the wait directly threatens unplanned purchases and loyalty.">
+  <div class="topbar noanim"></div>
+  <div class="chip noanim"></div>
+  <div class="eyebrow">THE PROBLEM  ·  02</div>
+  <div class="headline">The shoppers who spend the most time and money are exactly the ones left standing.</div>
+  
+<div class="col" style="left:101px;top:389px;width:893px">
+  <div class="bullet">Older, pregnant and diverse shoppers face long billing queues in the tight space around the counters — with no resting place. The study ties this to exhaustion and a poorer store experience.</div>
+  <div class="bullet">The empathy map is blunt: at some point these shoppers "just want to bill and exit." Tired = shorter browse = fewer unplanned picks.</div>
+  <div class="bullet">It is a marketing problem, not just a comfort one: a worn-out exit hurts repeat intent — the metric DMart lives on.</div>
+</div>
+<div style="position:absolute;left:1037px;top:411px;width:778px">
+  <div class="barlabel">No resting / sitting — grave problem</div>
+  <div class="track"><div class="fill" style="width:75%;background:#3A4C40"></div><span class="barval">75%</span></div>
+  <div class="barlabel" style="margin-top:36px">Loose-grain section problems</div>
+  <div class="track"><div class="fill" style="width:64%;background:#8BA892"></div><span class="barval">64%</span></div>
+  <div class="note" style="margin-top:54px;width:778px">n = ~50 survey responses (college, family &amp; relatives). Representativeness of DMart's shopper base <span class="pill" style="width:143px">[NEEDED]</span></div>
+</div>
+  <div class="footer noanim"><span>DMart · Trolley-Rest Pilot Pitch</span><span>Source: Group 7 HCD study · DMart + Star Bazaar observations</span><span class="pagenum">02 / 10</span></div>
+</section>
+
+<section class="slide" data-notes="This is the pivot slide. The research already did the hard work: it located the pain precisely — ~1 hour in, at billing. That tells us a lounge or benches would backfire (more crowding). The insight is to attach the rest to the asset the shopper already has: the trolley. Keep the counter footprint unchanged. Transition into how we chose this.">
+  <div class="topbar noanim"></div>
+  <div class="chip noanim"></div>
+  <div class="eyebrow">THE INSIGHT  ·  03</div>
+  <div class="headline">The need to rest peaks at the billing counter — so the rest belongs there, not in a corner.</div>
+  
+<div class="journey" style="top:411px"><div class="jnode "><div class="jlabel">ARRIVE</div><div class="jsub">find trolley</div></div><div class="jchev">▶</div><div class="jnode "><div class="jlabel">BROWSE</div><div class="jsub">collect items</div></div><div class="jchev">▶</div><div class="jnode jactive"><div class="jlabel">PAUSE</div><div class="jsub">look for a seat</div></div><div class="jchev">▶</div><div class="jnode jactive"><div class="jlabel">CHECK OUT</div><div class="jsub">wait in line</div></div><div class="jchev">▶</div><div class="jnode "><div class="jlabel">LEAVE</div><div class="jsub">bill & exit</div></div></div>
+<div class="callout" style="top:612px">
+  <div class="label" style="color:#C4694A">THE AHA</div>
+  <div class="body">The study's journey map shows the resting problem surfaces only after ~1 hour — right at billing, when the shopper is nearly done. A fixed seating zone makes crowding worse. So we bring the rest to the shopper, on the trolley, at the queue.</div>
+</div>
+<div class="sub" style="top:874px">Implication for DMart: the fix must live in the counter footprint — zero new floor space, zero extra queue.</div>
+  <div class="footer noanim"><span>DMart · Trolley-Rest Pilot Pitch</span><span>Source: Group 7 HCD study · DMart + Star Bazaar observations</span><span class="pagenum">03 / 10</span></div>
+</section>
+
+<section class="slide" data-notes="Show the discipline: they did not jump to a solution. Four candidate problems, then a hard constraint — staff data was unavailable, so they bet on the shopper. Among shopper problems, 'no seating' won. Then four design rules acted as a filter; only a trolley-mounted rest could pass all four. That is the concept we are pitching.">
+  <div class="topbar noanim"></div>
+  <div class="chip noanim"></div>
+  <div class="eyebrow">IDEATION  ·  04</div>
+  <div class="headline">Four problem angles, four design rules — one resting concept cleared them all.</div>
+  
+<div class="grid2" style="top:396px;left:101px">
+  <div class="card ch"><div class="ctitle">NO SEATING</div><div class="csub">no rest point</div><div class="ctag">CHOSEN</div></div>
+  <div class="card"><div class="ctitle">LOOSE-GRAIN BAGS</div><div class="csub">misplaced / confusion</div></div>
+  <div class="card"><div class="ctitle">TROLLEY PROBLEMS</div><div class="csub">wheels / manoeuvre</div></div>
+  <div class="card"><div class="ctitle">HIGH SHELVES</div><div class="csub">hard to reach</div></div>
+</div>
+<div class="col" style="left:1015px;top:396px;width:778px">
+  <div class="label" style="color:#C4694A">WHY CUSTOMERS, NOT STAFF</div>
+  <div class="body" style="font-size:27px;margin-bottom:30px">The team could not get primary data from staff or retail chains, so it focused on the shopper — and on "no seating" as the single main problem.</div>
+  <div class="label" style="color:#C4694A">FOUR RULES THE WINNER HAD TO PASS</div>
+  <div class="check"><span class="tick">✓</span><span>Independency — no help, just fold &amp; rest</span></div>
+  <div class="check"><span class="tick">✓</span><span>Body support — back/arm, fits different users</span></div>
+  <div class="check"><span class="tick">✓</span><span>No mess — no queue / aisle obstruction</span></div>
+  <div class="check"><span class="tick">✓</span><span>Durable &amp; daily — cleanable, long-lasting</span></div>
+</div>
+  <div class="footer noanim"><span>DMart · Trolley-Rest Pilot Pitch</span><span>Source: Group 7 HCD study · DMart + Star Bazaar observations</span><span class="pagenum">04 / 10</span></div>
+</section>
+
+<section class="slide" data-notes="Proof it is real, not a sketch. The team went mock-up → Blender → mechanism POC → a built prototype envelope with concrete materials and dimensions. The critical learning: sitting shifts the cart's weight forward, so they engineered a wheel-lock brake. That is the difference between a student idea and a pilot-ready product. Next: what it actually is.">
+  <div class="topbar noanim"></div>
+  <div class="chip noanim"></div>
+  <div class="eyebrow">PROTOTYPE  ·  05</div>
+  <div class="headline">From cardboard mock-up to a brake-locked trolley seat — we solved the one flaw that could sink it.</div>
+  
+<div class="col" style="left:101px;top:389px;width:864px">
+  <div class="label" style="color:#C4694A">HOW WE BUILT IT</div>
+  <div class="path">
+    <div class="step">Mini mock-up</div><div class="ar">→</div><div class="step">Blender 3D models</div><div class="ar">→</div><div class="step">Mechanism POCs</div><div class="ar">→</div><div class="step sl">Prototype envelope</div>
+  </div>
+  <div class="label" style="color:#C4694A;margin-top:30px">MATERIALS</div>
+  <div class="bullet">Cushion: coconut fibre / firm high-density PU foam. Cover: silicon sheet or TPU. Paddle: recyclable plastic.</div>
+  <div class="label" style="color:#C4694A">SIZE &amp; FINISH</div>
+  <div class="bullet">Seat 1.5–2" high, 10–12" long, 8–9" wide. Rounded edges, firm, wipe-clean surface.</div>
+  <div class="label" style="color:#C4694A">WHAT WE LEARNED</div>
+  <div class="bullet">Seated weight pushed the cart forward → solved with a wheel-lock brake. Materials chosen weather / heat / water-proof and easy-clean.</div>
+</div>
+<div class="spec" style="left:1210px;top:425px">
+  <div class="dim dim-top">H 1.5–2"</div>
+  <div class="seat"><div class="seatlabel">SEAT PAD</div></div>
+  <div class="dim dim-left">L 10–12"</div>
+  <div class="dim dim-right">W 8–9"</div>
+  <div class="speccap">Prototype envelope — built for real bodies</div>
+</div>
+  <div class="footer noanim"><span>DMart · Trolley-Rest Pilot Pitch</span><span>Source: Group 7 HCD study · DMart + Star Bazaar observations</span><span class="pagenum">05 / 10</span></div>
+</section>
+
+<section class="slide" data-notes="Say it in one sentence and move on — the Head of Marketing does not need mechanics, just the mental model. Three steps, all self-service: fold, sit (brake holds the cart), fold away. No staff, no new floor space, no queue change. This is the product we are asking them to pilot.">
+  <div class="topbar noanim"></div>
+  <div class="chip noanim"></div>
+  <div class="eyebrow">THE PRODUCT  ·  06</div>
+  <div class="headline">A trolley that doubles as a seat — rest at the counter, then keep shopping.</div>
+  
+<div class="onesent">
+  <span class="label" style="color:#C4694A">IN ONE SENTENCE</span>
+  <span class="sent">A foldable resting seat that clips onto the DMart trolley so shoppers sit while queuing at billing — with a wheel-lock brake for safety.</span>
+</div>
+<div class="steprow" style="top:584px">
+  <div class="scard"><div class="scircle">1</div><div class="sctitle">FOLD OUT</div><div class="scdesc">Unclip the paddle; it folds flat from the trolley frame.</div></div>
+  <div class="arbig">→</div>
+  <div class="scard"><div class="scircle">2</div><div class="sctitle">SIT + BRAKE</div><div class="scdesc">Shopper rests; the brake locks the wheels — no drift.</div></div>
+  <div class="arbig">→</div>
+  <div class="scard"><div class="scircle">3</div><div class="sctitle">FOLD AWAY</div><div class="scdesc">Clip it back; roll straight to the billing counter &amp; exit.</div></div>
+</div>
+  <div class="footer noanim"><span>DMart · Trolley-Rest Pilot Pitch</span><span>Source: Group 7 HCD study · DMart + Star Bazaar observations</span><span class="pagenum">06 / 10</span></div>
+</section>
+
+<section class="slide" data-notes="Tie every feature back to a DMart benefit, not a spec. Fold-and-rest reduces calls on floor staff; body support serves the older/pregnant base DMart wants to keep; the brake is the safety answer to the prototype's weight problem; wipe-clean meets the cleanliness bar the study itself set; clear ownership keeps it hygienic and sustainable. Five reasons this is a marketing asset, not a cost.">
+  <div class="topbar noanim"></div>
+  <div class="chip noanim"></div>
+  <div class="eyebrow">KEY FUNCTIONS  ·  07</div>
+  <div class="headline">Five built-in features that turn a wait into a branded DMart moment.</div>
+  <div class="featrow" style="top:411px"><div class="feat"><div class="featbar"></div><div class="featnum">01</div><div class="feattitle">FOLD & REST</div><div class="featdesc">No help needed — pure self-service.</div><div class="featdiv"></div><div class="featbenefit">DMart benefit</div><div class="featb">Frees floor helpers; on-brand 'everyday ease'.</div></div><div class="feat"><div class="featbar"></div><div class="featnum">02</div><div class="feattitle">BODY SUPPORT</div><div class="featdesc">Back & arm support; options for different users.</div><div class="featdiv"></div><div class="featbenefit">DMart benefit</div><div class="featb">Serves elderly & pregnant — DMart's loyal base.</div></div><div class="feat"><div class="featbar"></div><div class="featnum">03</div><div class="feattitle">WHEEL-LOCK BRAKE</div><div class="featdesc">Counterweight problem, solved.</div><div class="featdiv"></div><div class="featbenefit">DMart benefit</div><div class="featb">Safe in tight counter space; no aisle block.</div></div><div class="feat"><div class="featbar"></div><div class="featnum">04</div><div class="feattitle">WIPE-CLEAN BUILD</div><div class="featdesc">Weather / heat / water-proof, durable.</div><div class="featdiv"></div><div class="featbenefit">DMart benefit</div><div class="featb">Low upkeep; meets 'cleanliness is a must'.</div></div><div class="feat"><div class="featbar"></div><div class="featnum">05</div><div class="feattitle">CLEAR OWNERSHIP</div><div class="featdesc">Recyclable-plastic paddle, hygienic.</div><div class="featdiv"></div><div class="featbenefit">DMart benefit</div><div class="featb">Sustainable and easy to maintain daily.</div></div></div>
+  <div class="footer noanim"><span>DMart · Trolley-Rest Pilot Pitch</span><span>Source: Group 7 HCD study · DMart + Star Bazaar observations</span><span class="pagenum">07 / 10</span></div>
+</section>
+
+<section class="slide" data-notes="Show this is human-centred, not decoration. The journey now has a PAUSE that appears at the counter; three real scenarios from the study are covered; and the four principles are the same rules that filtered the concept. The takeaway for marketing: this fits DMart's bodies and DMart's floor — not a showroom fantasy.">
+  <div class="topbar noanim"></div>
+  <div class="chip noanim"></div>
+  <div class="eyebrow">DESIGN  ·  08</div>
+  <div class="headline">Built around real bodies and three shopper scenarios — not a generic bench.</div>
+  
+<div class="col" style="left:101px;top:382px;width:1008px">
+  <div class="label" style="color:#C4694A">REIMAGINED JOURNEY</div>
+  <div class="journey" style="position:relative;top:10px"><div class="jnode "><div class="jlabel">ARRIVE</div><div class="jsub">trolley</div></div><div class="jchev">▶</div><div class="jnode "><div class="jlabel">BROWSE</div><div class="jsub">collect</div></div><div class="jchev">▶</div><div class="jnode jactive"><div class="jlabel">PAUSE</div><div class="jsub">seat appears</div></div><div class="jchev">▶</div><div class="jnode jactive"><div class="jlabel">CHECK OUT</div><div class="jsub">rest & queue</div></div><div class="jchev">▶</div><div class="jnode "><div class="jlabel">LEAVE</div><div class="jsub">fold & exit</div></div></div>
+  <div class="label" style="color:#C4694A;margin-top:54px">DESIGN PRINCIPLES</div>
+  <div class="pills"><div class="pillbox">Independency</div><div class="pillbox">Body support</div><div class="pillbox">No mess</div><div class="pillbox">Durable & daily</div></div>
+</div>
+<div class="col" style="left:1195px;top:382px;width:623px">
+  <div class="label" style="color:#C4694A">THREE SCENARIOS SERVED</div>
+  <div class="scen">Independent shopper — visible rest + standing support</div>
+  <div class="scen">Family companion — sit without losing the group</div>
+  <div class="scen">Temporary fatigue — a short, judgement-free pause</div>
+  <div class="mantra">Mantra from the study: “build for real bodies.”</div>
+</div>
+  <div class="footer noanim"><span>DMart · Trolley-Rest Pilot Pitch</span><span>Source: Group 7 HCD study · DMart + Star Bazaar observations</span><span class="pagenum">08 / 10</span></div>
+</section>
+
+<section class="slide" data-notes="Be upfront: the source deck has zero marketing KPIs, so every baseline and target is [NEEDED] and must come from DMart's own data. What we CAN promise is the method — the same survey-based primary research that surfaced the 75%/64% signals, run pilot-vs-control. Ask the marketing head to supply the baselines so we can set real targets together.">
+  <div class="topbar noanim"></div>
+  <div class="chip noanim"></div>
+  <div class="eyebrow">MEASUREMENT  ·  09</div>
+  <div class="headline">We'll track footfall, basket size, repeat rate & campaign ROI — but baselines and targets need DMart's data.</div>
+  
+<div class="ktable" style="left:101px;top:396px;width:1253px">
+  <div class="krow khead"><div>KPI</div><div>Baseline</div><div>Target</div><div>How we measure</div></div>
+  <div class="krow"><div>Footfall (pilot stores)</div><div class="kneed">[NEEDED]</div><div class="kneed">[NEEDED]</div><div class="khow">Store traffic vs control</div></div>
+  <div class="krow"><div>Basket size</div><div class="kneed">[NEEDED]</div><div class="kneed">[NEEDED]</div><div class="khow">Avg ticket at billing</div></div>
+  <div class="krow"><div>Repeat rate</div><div class="kneed">[NEEDED]</div><div class="kneed">[NEEDED]</div><div class="khow">Return visits / loyalty</div></div>
+  <div class="krow"><div>Campaign ROI</div><div class="kneed">[NEEDED]</div><div class="kneed">[NEEDED]</div><div class="khow">Spend vs incremental sales</div></div>
+</div>
+<div class="col" style="left:1390px;top:396px;width:425px">
+  <div class="label" style="color:#C4694A">MEASUREMENT METHOD</div>
+  <div class="bullet">Reuse the study's own method: survey-based primary research (the same approach that produced the 75% / 64% signals).</div>
+  <div class="bullet">Compare pilot stores vs a control store.</div>
+  <div style="margin-top:30px"><span class="pill" style="width:143px">[NEEDED]</span><span class="note" style="display:inline;margin-left:12px">sample &amp; cadence</span></div>
+</div>
+  <div class="footer noanim"><span>DMart · Trolley-Rest Pilot Pitch</span><span>Source: Group 7 HCD study · DMart + Star Bazaar observations</span><span class="pagenum">09 / 10</span></div>
+</section>
+
+<section class="slide" data-notes="Close with a small, safe ask — not a national rollout. A rush-hour billing-zone pilot in a few high-footfall stores, using the prototype we already built. We are explicit that scope, cost and timeline are [NEEDED] from DMart, because the study gave us the problem and the product, not the P&amp;L. Offer to co-own the measurement plan from Slide 9.">
+  <div class="topbar noanim"></div>
+  <div class="chip noanim"></div>
+  <div class="eyebrow">THE ASK & NEXT STEPS  ·  10</div>
+  <div class="headline">Pilot the trolley-seat in rush-hour billing zones — scope, cost & timeline to set with DMart.</div>
+  
+<div class="askrow" style="top:411px">
+  <div class="ask"><div class="askhead">PILOT SCOPE</div><div class="askbody">Rush-hour billing queues in high-footfall stores; focus on older / pregnant-heavy catchment.</div><div class="askneed"><span class="pill" style="width:143px">[NEEDED]</span><span class="note" style="display:inline;margin-left:10px">store count & geographies</span></div></div><div class="ask"><div class="askhead">TIMELINE & INVESTMENT</div><div class="askbody">Build + field the prototype; measure at midpoint and close.</div><div class="askneed"><span class="pill" style="width:143px">[NEEDED]</span><span class="note" style="display:inline;margin-left:10px">weeks, capex & opex</span></div></div><div class="ask"><div class="askhead">EXPECTED OUTCOME</div><div class="askbody">Validate the 75% rest-pain signal in DMart's stores; test the loyalty / queue-ease hypothesis.</div><div class="askneed"><span class="pill" style="width:143px">[NEEDED]</span><span class="note" style="display:inline;margin-left:10px">quantified targets</span></div></div>
+</div>
+<div class="cta">THE ASK:&nbsp; approve a low-risk pilot &nbsp;—&nbsp; we bring the prototype, DMart brings the stores and the data.</div>
+  <div class="footer noanim"><span>DMart · Trolley-Rest Pilot Pitch</span><span>Source: Group 7 HCD study · DMart + Star Bazaar observations</span><span class="pagenum">10 / 10</span></div>
+</section></div></div>
+<div id="hint">← → navigate · N notes · click sides</div>
+<div id="dots"></div>
+<div id="nav"><button id="prev">‹ Prev</button><button id="next">Next ›</button></div>
+<div id="notes"></div>
+<script>
+const stage=document.getElementById('stage');
+const slides=[...document.querySelectorAll('.slide')];
+const dots=document.getElementById('dots');
+const notesEl=document.getElementById('notes');
+let cur=0;
+function fit(){const s=Math.min(innerWidth/1920,innerHeight/1080);stage.style.transform='scale('+s+')';}
+function show(i){cur=(i+slides.length)%slides.length;slides.forEach((s,k)=>s.classList.toggle('active',k===cur));
+ dots.querySelectorAll('.dot').forEach((d,k)=>d.classList.toggle('on',k===cur));
+ notesEl.innerHTML='<b>Speaker notes · Slide '+(cur+1)+':</b> '+slides[cur].dataset.notes; animateSlide(slides[cur]);}
+slides.forEach((_,k)=>{const d=document.createElement('div');d.className='dot';d.onclick=()=>show(k);dots.appendChild(d);});
+function animateSlide(sl){const els=[...sl.querySelectorAll('*')].filter(e=>!e.classList.contains('noanim'));els.forEach((e,idx)=>{e.style.animation='none';void e.offsetWidth;const isPop=e.classList.contains('badge')||e.classList.contains('bignum')||e.classList.contains('scircle');const anim=isPop?'pop':'rise';const d=Math.min(idx*0.035,1.1);e.style.animation=anim+' .6s cubic-bezier(.2,.7,.2,1) '+d+'s both';});}
+function prev(){show(cur-1)}function next(){show(cur+1)}
+document.getElementById('prev').onclick=prev;document.getElementById('next').onclick=next;
+addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){next();e.preventDefault();}
+ if(e.key==='ArrowLeft'||e.key==='PageUp'){prev();e.preventDefault();}
+ if(e.key.toLowerCase()==='n'){notesEl.classList.toggle('show');}});
+stage.addEventListener('click',e=>{const r=stage.getBoundingClientRect();if(e.clientX-r.left<r.width/2)prev();else next();});
+addEventListener('resize',fit);fit();show(0);
+</script></body></html>
